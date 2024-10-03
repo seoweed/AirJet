@@ -1,10 +1,16 @@
 package com.meta.air_jet._core.config;
 
+import com.meta.air_jet._core.filter.JwtRequestFilter;
+import com.meta.air_jet._core.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -13,18 +19,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final UserDetailsService userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
+
 
     private static final String[] WHITE_LIST = {
             "/",
             "/api/auth/**",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
-//            ,"/h2-console/**"  // h2-console 경로 추가
+            ,"/h2-console/**"  // h2-console 경로 추가
     };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
     }
 
 
@@ -40,18 +58,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(WHITE_LIST).permitAll()
-                                .anyRequest().authenticated());
-//                .headers(headers -> headers
-//                        .frameOptions().disable()  // H2 콘솔에서 프레임 사용 허용
-//                )
+                                .anyRequest().authenticated())
+                .headers(headers -> headers
+                        .frameOptions().disable()  // H2 콘솔에서 프레임 사용 허용
+                )
 //                .exceptionHandling((exception) ->
 //                        {
 //                            exception.authenticationEntryPoint(authenticationEntryPoint());
 //                            exception.accessDeniedHandler(accessDeniedHandler());
 //                        }
 //                )
-//                .addFilterBefore(new JWTTokenFilter(jwtTokenProvider),
-//                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
