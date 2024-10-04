@@ -5,4 +5,11 @@ public class UserRequestDTO {
             String loginId,
             String password
     ){}
+
+    public record signDTO(
+            String loginId,
+            String password,
+            String confirmPassword,
+            String nickname
+    ){}
 }

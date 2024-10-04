@@ -2,6 +2,9 @@ spring:
   application:
     name: air_jet
 
+  jackson:
+    default-property-inclusion: non_null
+
   profiles:
     active: default,secrets
 
