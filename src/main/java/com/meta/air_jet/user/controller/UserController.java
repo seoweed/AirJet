@@ -28,7 +28,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody UserRequestDTO.loginDTO dto) throws Exception {
+    public ResponseEntity<?> authenticate(@RequestBody UserRequestDTO.loginDTO dto){
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.loginId(), dto.password())
@@ -40,7 +40,21 @@ public class UserController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(dto.loginId());
         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization" , "Bearer " + jwtToken);
+        headers.add("Authorization", "Bearer " + jwtToken);
         return new ResponseEntity<>(ApiUtils.success(jwtToken), headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody UserRequestDTO.signDTO dto) {
+        try {
+            userService.save(dto);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(ApiUtils.success("회원가입이 완료되었습니다."), HttpStatus.OK);
     }
 }
