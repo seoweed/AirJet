@@ -41,7 +41,7 @@ public class UserController {
         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtToken);
-        return new ResponseEntity<>(ApiUtils.success(jwtToken), headers, HttpStatus.OK);
+        return new ResponseEntity<>(ApiUtils.success("로그인이 완료되었습니다."), headers, HttpStatus.OK);
     }
 
     @PostMapping("/signup")
