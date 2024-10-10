@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -35,13 +37,15 @@ public class UserController {
             );
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("로그인 요청 실패 loginId: " + dto.loginId() + ", 시도 시간: " + LocalDateTime.now());
             return new ResponseEntity<>(ApiUtils.error("사용자의 이름 또는 비밀번호가 잘못되었습니다."), HttpStatus.UNAUTHORIZED);
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(dto.loginId());
         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtToken);
-        return new ResponseEntity<>(ApiUtils.success("로그인이 완료되었습니다."), headers, HttpStatus.OK);
+        System.out.println("로그인 요청 성공! loginId: " + dto.loginId() + ", 시도 시간: " + LocalDateTime.now());
+        return new ResponseEntity<>(ApiUtils.loginSuccess("로그인이 완료되었습니다.", dto.loginId()), headers, HttpStatus.OK);
     }
 
     @PostMapping("/signup")
