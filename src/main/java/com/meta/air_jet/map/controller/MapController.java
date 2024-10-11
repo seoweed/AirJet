@@ -1,5 +1,6 @@
 package com.meta.air_jet.map.controller;
 
+import com.meta.air_jet.map.service.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class MapController {
-    private final MapController mapController;
+    private final MapService mapService;
 
 }
