@@ -20,6 +20,19 @@ public class MapService {
     private final MapRepository mapRepository;
     private final MissionRepository missionRepository;
 
+    public Map getMapInfo(String mapName) {
+        return mapRepository.findByMapName(mapName);
+    }
+
+    public ArrayList<Mission> getMapMissions(List<Long> missionIds) {
+        ArrayList<Mission> mapMissions = new ArrayList<>();
+        missionIds.forEach(missionId -> {
+            Mission mission = missionRepository.findById(missionId).get();
+            mapMissions.add(mission);
+        });
+        return mapMissions;
+    }
+
     public void save(MapRequestDTO.mapCreateDTO dto) {
         duplicateMapName(dto.mapName());
 
