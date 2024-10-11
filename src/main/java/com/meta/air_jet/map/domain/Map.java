@@ -24,7 +24,6 @@ public class Map {
     private List<Long> missionIds;
 
     @Builder
-
     public Map(String mapName, double latitude, double longitude, String producer, List<Long> missionIds) {
         this.mapName = mapName;
         this.latitude = latitude;
