@@ -20,18 +20,16 @@ public class Map {
     private double latitude;
     private double longitude;
     private String producer;
-    private Long startPointId;
     @ElementCollection
     private List<Long> missionIds;
 
     @Builder
 
-    public Map(String mapName, double latitude, double longitude, String producer, Long startPointId, List<Long> missionIds) {
+    public Map(String mapName, double latitude, double longitude, String producer, List<Long> missionIds) {
         this.mapName = mapName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.producer = producer;
-        this.startPointId = startPointId;
         this.missionIds = missionIds;
     }
 }
