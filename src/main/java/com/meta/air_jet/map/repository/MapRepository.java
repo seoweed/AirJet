@@ -4,4 +4,5 @@ import com.meta.air_jet.map.domain.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MapRepository extends JpaRepository<Map, Long> {
+    Map findByMapName(String mapName);
 }

@@ -23,7 +23,7 @@ public class MapController {
         try {
             mapService.save(dto);
         } catch (Exception e) {
-            return new ResponseEntity<>(ApiUtils.error("맵 저장을 완료하지 못하였습니다. \n에러 메세지: " + e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(ApiUtils.success("맵 저장을 완료했습니다."), HttpStatus.OK);
 

@@ -21,6 +21,8 @@ public class MapService {
     private final MissionRepository missionRepository;
 
     public void save(MapRequestDTO.mapCreateDTO dto) {
+        duplicateMapName(dto.mapName());
+
         List<Long> missionsIds = new ArrayList<>();
         // saveAllFlush 고려
         List<Mission> missions = missionRepository.saveAll(dto.mission());
@@ -34,5 +36,12 @@ public class MapService {
                 .missionIds(missionsIds)
                 .build();
         mapRepository.save(map);
+    }
+
+    private void duplicateMapName(String mapName) {
+        Map findMap = mapRepository.findByMapName(mapName);
+        if (findMap != null) {
+            throw new IllegalArgumentException("맵 이름이 중복되었습니다. map name: " + mapName);
+        }
     }
 }
