@@ -1,7 +1,6 @@
 package com.meta.air_jet.map.domain.dto;
 
 import com.meta.air_jet.mission.Mission;
-import jakarta.persistence.ElementCollection;
 
 import java.util.List;
 
@@ -15,4 +14,8 @@ public class MapRequestDTO {
         List<Mission> mission
     )
     {}
+
+    public record getMapDataDTO(
+            String mapName
+    ){}
 }

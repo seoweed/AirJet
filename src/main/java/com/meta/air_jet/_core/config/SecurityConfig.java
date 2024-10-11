@@ -31,6 +31,7 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST = {
             "/",
+            "/api/map/*",
             "/api/getImage",
             "/api/image/save",
             "/api/map/create",
