@@ -6,7 +6,6 @@ import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.repository.MapRepository;
 import com.meta.air_jet.mission.Mission;
 import com.meta.air_jet.mission.MissionRepository;
-import io.jsonwebtoken.lang.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class MapService {
     public void save(MapRequestDTO.mapCreateDTO dto) {
         List<Long> missionsIds = new ArrayList<>();
         // saveAllFlush 고려
-        List<Mission> missions = missionRepository.saveAll(dto.missions());
+        List<Mission> missions = missionRepository.saveAll(dto.mission());
         missions.forEach(mission -> missionsIds.add(mission.getId()));
 
         Map map = Map.builder()

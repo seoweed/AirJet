@@ -12,7 +12,7 @@ public class MapRequestDTO {
         double latitude,
         double longitude,
         String producer,
-        List<Mission> missions
+        List<Mission> mission
     )
     {}
 }
