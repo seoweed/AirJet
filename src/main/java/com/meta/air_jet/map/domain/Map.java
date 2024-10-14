@@ -16,7 +16,7 @@ public class Map {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String mapName;
-    //    private String mapImage;
+    private String mapImage;
     private double latitude;
     private double longitude;
     private String producer;
@@ -24,8 +24,9 @@ public class Map {
     private List<Long> missionIds;
 
     @Builder
-    public Map(String mapName, double latitude, double longitude, String producer, List<Long> missionIds) {
+    public Map(String mapName, String mapImage, double latitude, double longitude, String producer, List<Long> missionIds) {
         this.mapName = mapName;
+        this.mapImage = mapImage;
         this.latitude = latitude;
         this.longitude = longitude;
         this.producer = producer;
