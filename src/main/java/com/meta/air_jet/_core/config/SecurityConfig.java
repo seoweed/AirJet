@@ -19,15 +19,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
+    public SecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     private static final String[] WHITE_LIST = {
             "/",
+            "/api/map/*",
+            "api/image/*",
+            "/api/getImage",
+            "/api/image/save",
+            "/api/map/create",
             "/api/auth/**",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
             ,"/h2-console/**"  // h2-console 경로 추가

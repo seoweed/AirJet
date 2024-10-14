@@ -24,7 +24,7 @@ spring:
 
   jpa:
     show-sql: true
-#    database: postgresql
+#    database: h2
     database: postgresql
     hibernate:
       ddl-auto: update
