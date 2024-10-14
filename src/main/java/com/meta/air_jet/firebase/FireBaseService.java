@@ -19,15 +19,13 @@ public class FireBaseService {
         // firebase storage에 파일 업로드
         Bucket bucket = StorageClient.getInstance().bucket();
         Blob blob = bucket.create(fileName, file.getInputStream(), file.getContentType());
-        return blob.getMediaLink();
+        return fileName;
     }
 
     public String sendImage(String fileName) throws Exception {
-
         Blob blob = StorageClient.getInstance().bucket().get(fileName);
         byte[] content = blob.getContent();
         return Base64.getEncoder().encodeToString(content);
-
     }
 
 }

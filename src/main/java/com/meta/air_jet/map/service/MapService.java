@@ -1,6 +1,7 @@
 package com.meta.air_jet.map.service;
 
 
+import com.meta.air_jet.firebase.FireBaseService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.repository.MapRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class MapService {
     private final MapRepository mapRepository;
     private final MissionRepository missionRepository;
+    private final FireBaseService fireBaseService;
 
     public Map getMapInfo(String mapName) {
         return mapRepository.findByMapName(mapName);
@@ -33,16 +36,17 @@ public class MapService {
         return mapMissions;
     }
 
-    public void save(MapRequestDTO.mapCreateDTO dto) {
+    public void save(MapRequestDTO.mapCreateDTO dto) throws IOException {
         duplicateMapName(dto.mapName());
 
         List<Long> missionsIds = new ArrayList<>();
-        // saveAllFlush 고려
         List<Mission> missions = missionRepository.saveAll(dto.mission());
         missions.forEach(mission -> missionsIds.add(mission.getId()));
 
+        String fileName = fireBaseService.uploadImage(dto.mapImage());
         Map map = Map.builder()
                 .mapName(dto.mapName())
+                .mapImage(fileName)
                 .latitude(dto.latitude())
                 .longitude(dto.longitude())
                 .producer(dto.producer())
