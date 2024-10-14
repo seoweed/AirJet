@@ -47,10 +47,9 @@ public class MapController {
         Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == 1).findAny().get();
 
         try {
-            // todo fireBase Service 로직에 어떠한 값으로 이미지 파일을 가져올 수 있는 로직 생성 후 파일 이름을 넣어주는 작업
-            fireBaseService.sendImage(null);
+            fireBaseService.sendImage(map.getMapImage());
         } catch (Exception e) {
-            return new HashMap<String,Object>() {{
+            return new HashMap<>() {{
                 put("errorMessage", "이미지 업로드에 실패하였습니다.");
                 put("error", e.getMessage());
             }};
