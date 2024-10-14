@@ -1,6 +1,7 @@
 package com.meta.air_jet.map.controller;
 
 import com.meta.air_jet._core.utils.ApiUtils;
+import com.meta.air_jet.firebase.FireBaseService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.service.MapService;
@@ -21,9 +22,11 @@ import java.util.HashMap;
 @RequestMapping("/api")
 public class MapController {
     private final MapService mapService;
+    private final FireBaseService fireBaseService;
 
     @PostMapping("/map/create")
     public ResponseEntity<?> save(@RequestBody MapRequestDTO.mapCreateDTO dto) {
+
         try {
             mapService.save(dto);
         } catch (Exception e) {
@@ -34,6 +37,7 @@ public class MapController {
 
     @PostMapping("/map/data")
     public HashMap<String, Object> mapData(@RequestBody MapRequestDTO.getMapDataDTO dto) {
+
         HashMap<String, Object> outputMapData = new HashMap<>();
         HashMap<String, Object> outputStartPoint = new HashMap<>();
 
@@ -41,6 +45,17 @@ public class MapController {
         ArrayList<Mission> mapMissions = mapService.getMapMissions(map.getMissionIds());
 
         Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == 1).findAny().get();
+
+        try {
+            // todo fireBase Service 로직에 어떠한 값으로 이미지 파일을 가져올 수 있는 로직 생성 후 파일 이름을 넣어주는 작업
+            fireBaseService.sendImage(null);
+        } catch (Exception e) {
+            return new HashMap<String,Object>() {{
+                put("errorMessage", "이미지 업로드에 실패하였습니다.");
+                put("error", e.getMessage());
+            }};
+        }
+
         // start point 값 추가
         outputStartPoint.put("x", startPointMission.getX());
         outputStartPoint.put("y", startPointMission.getY());
