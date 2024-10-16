@@ -7,6 +7,7 @@ import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.service.MapService;
 import com.meta.air_jet.mission.Mission;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,4 +76,19 @@ public class MapController {
         System.out.println("맵 데이터 내보내기 성공" + LocalDateTime.now());
         return outputMapData;
     }
+
+    @PostMapping("/maps")
+    public ResponseEntity<?> mapNameList() {
+        List<String> mapList;
+        try {
+            mapList = mapService.getMapNameList();
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(ApiUtils.error("맵 목록 불러오기에 실패하였습니다."));
+        }
+        return ResponseEntity.ok()
+                .body(ApiUtils.success(mapList));
+    }
+
 }

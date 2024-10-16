@@ -61,4 +61,8 @@ public class MapService {
             throw new IllegalArgumentException("맵 이름이 중복되었습니다. map name: " + mapName);
         }
     }
+
+    public List<String> getMapNameList() {
+        return mapRepository.findAllMapName();
+    }
 }
