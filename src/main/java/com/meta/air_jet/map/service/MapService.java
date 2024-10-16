@@ -42,11 +42,11 @@ public class MapService {
         List<Long> missionsIds = new ArrayList<>();
         List<Mission> missions = missionRepository.saveAll(dto.mission());
         missions.forEach(mission -> missionsIds.add(mission.getId()));
-
-        String fileName = fireBaseService.uploadImage(dto.mapImage());
+        // Multipart 이미지 파일로 들어와야 하는데 지금 만들 예정인 dto는 base 64 로 인코딩 된 이미지 파일이 들어올 예정임
+//        String fileName = fireBaseService.uploadImage(dto.mapImage());
         Map map = Map.builder()
                 .mapName(dto.mapName())
-                .mapImage(fileName)
+//                .mapImage(fileName)
                 .latitude(dto.latitude())
                 .longitude(dto.longitude())
                 .producer(dto.producer())

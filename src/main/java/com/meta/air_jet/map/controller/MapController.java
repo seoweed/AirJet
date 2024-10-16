@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,7 +27,7 @@ public class MapController {
 
     @PostMapping("/map/create")
     public ResponseEntity<?> save(@RequestBody MapRequestDTO.mapCreateDTO dto) {
-
+        System.out.println("dto.toString() = " + dto.toString());
         try {
             mapService.save(dto);
         } catch (Exception e) {
@@ -46,11 +47,12 @@ public class MapController {
 
         Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == 1).findAny().get();
 
+        String imageEncoded;
         try {
-            fireBaseService.sendImage(map.getMapImage());
+            imageEncoded = fireBaseService.sendImage(map.getMapImage());
         } catch (Exception e) {
             return new HashMap<>() {{
-                put("errorMessage", "이미지 업로드에 실패하였습니다.");
+                put("errorMessage", "이미지 파일 오류");
                 put("error", e.getMessage());
             }};
         }
@@ -62,13 +64,14 @@ public class MapController {
         // map data 추가
         outputMapData.put("mapName", map.getMapName());
         // 이미지 값 수정
-        outputMapData.put("mapImage", null);
+        outputMapData.put("mapImage", imageEncoded);
         outputMapData.put("latitude", map.getLatitude());
         outputMapData.put("longitude", map.getLongitude());
         outputMapData.put("producer", map.getProducer());
         outputMapData.put("mission", mapMissions);
         outputMapData.put("startPoint", outputStartPoint);
 
+        System.out.println("맵 데이터 내보내기 성공" + LocalDateTime.now());
         return outputMapData;
     }
 }

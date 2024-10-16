@@ -8,7 +8,7 @@ import java.util.List;
 public class MapRequestDTO {
     public record mapCreateDTO(
         String mapName,
-        MultipartFile mapImage,
+//        MultipartFile mapImage,
         double latitude,
         double longitude,
         String producer,
