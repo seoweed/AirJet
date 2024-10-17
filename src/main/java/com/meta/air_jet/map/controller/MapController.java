@@ -10,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,10 +26,13 @@ public class MapController {
     private final FireBaseService fireBaseService;
 
     @PostMapping("/map/create")
-    public ResponseEntity<?> save(@RequestBody MapRequestDTO.mapCreateDTO dto) {
+    public ResponseEntity<?> save(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("data") MapRequestDTO.mapCreateDTO dto) {
+        System.out.println("file = " + file);
         System.out.println("dto.toString() = " + dto.toString());
         try {
-            mapService.save(dto);
+            mapService.save(file, dto);
         } catch (Exception e) {
             return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.BAD_REQUEST);
         }

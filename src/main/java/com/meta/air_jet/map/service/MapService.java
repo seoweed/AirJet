@@ -10,6 +10,7 @@ import com.meta.air_jet.mission.MissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,17 +37,16 @@ public class MapService {
         return mapMissions;
     }
 
-    public void save(MapRequestDTO.mapCreateDTO dto) throws IOException {
+    public void save(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
         duplicateMapName(dto.mapName());
 
         List<Long> missionsIds = new ArrayList<>();
         List<Mission> missions = missionRepository.saveAll(dto.mission());
         missions.forEach(mission -> missionsIds.add(mission.getId()));
-        // Multipart 이미지 파일로 들어와야 하는데 지금 만들 예정인 dto는 base 64 로 인코딩 된 이미지 파일이 들어올 예정임
-//        String fileName = fireBaseService.uploadImage(dto.mapImage());
+        String fileName = fireBaseService.uploadImage(mapImage);
         Map map = Map.builder()
                 .mapName(dto.mapName())
-//                .mapImage(fileName)
+                .mapImage(fileName)
                 .latitude(dto.latitude())
                 .longitude(dto.longitude())
                 .producer(dto.producer())
