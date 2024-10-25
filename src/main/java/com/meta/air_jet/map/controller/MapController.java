@@ -8,6 +8,7 @@ import com.meta.air_jet.map.service.MapService;
 import com.meta.air_jet.mission.Mission;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,6 +91,24 @@ public class MapController {
         }
         return ResponseEntity.ok()
                 .body(ApiUtils.success(mapList));
+    }
+
+    @GetMapping("/map/all")
+    public ResponseEntity<?> mapList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+
+        Page<Map> mapList;
+        try {
+            mapList = mapService.findAllMap(page, size);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(ApiUtils.error("맵 목록 불러오기에 실패하였습니다."));
+        }
+
+        return ResponseEntity.ok().body(ApiUtils.success(mapList));
     }
 
 }

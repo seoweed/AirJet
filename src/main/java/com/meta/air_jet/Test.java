@@ -3,7 +3,6 @@ package com.meta.air_jet;
 import com.meta.air_jet._core.utils.ApiUtils;
 import com.meta.air_jet._core.utils.SecurityUtils;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
-import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;

@@ -8,11 +8,16 @@ import com.meta.air_jet.map.repository.MapRepository;
 import com.meta.air_jet.mission.Mission;
 import com.meta.air_jet.mission.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +56,7 @@ public class MapService {
                 .longitude(dto.longitude())
                 .producer(dto.producer())
                 .missionIds(missionsIds)
+                .createAt(LocalDateTime.now())
                 .build();
         mapRepository.save(map);
     }
@@ -64,5 +70,10 @@ public class MapService {
 
     public List<String> getMapNameList() {
         return mapRepository.findAllMapName();
+    }
+
+    public Page<Map> findAllMap(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createAt").descending());
+        return mapRepository.findAllSorted(pageable);
     }
 }
