@@ -7,15 +7,17 @@ import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.service.MapService;
 import com.meta.air_jet.mission.Mission;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,10 +27,13 @@ public class MapController {
     private final FireBaseService fireBaseService;
 
     @PostMapping("/map/create")
-    public ResponseEntity<?> save(@RequestBody MapRequestDTO.mapCreateDTO dto) {
-
+    public ResponseEntity<?> save(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("data") MapRequestDTO.mapCreateDTO dto) {
+        System.out.println("file = " + file);
+        System.out.println("dto.toString() = " + dto.toString());
         try {
-            mapService.save(dto);
+            mapService.save(file, dto);
         } catch (Exception e) {
             return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -46,11 +51,12 @@ public class MapController {
 
         Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == 1).findAny().get();
 
+        String imageEncoded;
         try {
-            fireBaseService.sendImage(map.getMapImage());
+            imageEncoded = fireBaseService.sendImage(map.getMapImage());
         } catch (Exception e) {
             return new HashMap<>() {{
-                put("errorMessage", "이미지 업로드에 실패하였습니다.");
+                put("errorMessage", "이미지 파일 오류");
                 put("error", e.getMessage());
             }};
         }
@@ -62,13 +68,47 @@ public class MapController {
         // map data 추가
         outputMapData.put("mapName", map.getMapName());
         // 이미지 값 수정
-        outputMapData.put("mapImage", null);
+        outputMapData.put("mapImage", imageEncoded);
         outputMapData.put("latitude", map.getLatitude());
         outputMapData.put("longitude", map.getLongitude());
         outputMapData.put("producer", map.getProducer());
         outputMapData.put("mission", mapMissions);
         outputMapData.put("startPoint", outputStartPoint);
 
+        System.out.println("맵 데이터 내보내기 성공" + LocalDateTime.now());
         return outputMapData;
     }
+
+    @PostMapping("/maps")
+    public ResponseEntity<?> mapNameList() {
+        List<String> mapList;
+        try {
+            mapList = mapService.getMapNameList();
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(ApiUtils.error("맵 목록 불러오기에 실패하였습니다."));
+        }
+        return ResponseEntity.ok()
+                .body(ApiUtils.success(mapList));
+    }
+
+    @GetMapping("/map/all")
+    public ResponseEntity<?> mapList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+
+        Page<Map> mapList;
+        try {
+            mapList = mapService.findAllMap(page, size);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(ApiUtils.error("맵 목록 불러오기에 실패하였습니다."));
+        }
+
+        return ResponseEntity.ok().body(ApiUtils.success(mapList));
+    }
+
 }

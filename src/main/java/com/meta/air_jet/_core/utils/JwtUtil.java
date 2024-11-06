@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
-    private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);;  // 비밀 키
+    private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);  // 비밀 키
     private long expirationTime = 86400000; // 1일
 
     public String generateToken(String username) {

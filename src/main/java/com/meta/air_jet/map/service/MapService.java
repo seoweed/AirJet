@@ -8,10 +8,16 @@ import com.meta.air_jet.map.repository.MapRepository;
 import com.meta.air_jet.mission.Mission;
 import com.meta.air_jet.mission.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +42,13 @@ public class MapService {
         return mapMissions;
     }
 
-    public void save(MapRequestDTO.mapCreateDTO dto) throws IOException {
+    public void save(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
         duplicateMapName(dto.mapName());
 
         List<Long> missionsIds = new ArrayList<>();
         List<Mission> missions = missionRepository.saveAll(dto.mission());
         missions.forEach(mission -> missionsIds.add(mission.getId()));
-
-        String fileName = fireBaseService.uploadImage(dto.mapImage());
+        String fileName = fireBaseService.uploadImage(mapImage);
         Map map = Map.builder()
                 .mapName(dto.mapName())
                 .mapImage(fileName)
@@ -51,6 +56,7 @@ public class MapService {
                 .longitude(dto.longitude())
                 .producer(dto.producer())
                 .missionIds(missionsIds)
+                .createAt(LocalDateTime.now())
                 .build();
         mapRepository.save(map);
     }
@@ -60,5 +66,14 @@ public class MapService {
         if (findMap != null) {
             throw new IllegalArgumentException("맵 이름이 중복되었습니다. map name: " + mapName);
         }
+    }
+
+    public List<String> getMapNameList() {
+        return mapRepository.findAllMapName();
+    }
+
+    public Page<Map> findAllMap(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createAt").descending());
+        return mapRepository.findAllSorted(pageable);
     }
 }
