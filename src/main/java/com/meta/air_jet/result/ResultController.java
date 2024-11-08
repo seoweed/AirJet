@@ -21,7 +21,7 @@ public class ResultController {
 
     @PostMapping("/result/save")
     public ResponseEntity<?> save(@RequestBody ResultRequestDTO.saveDTO dto) {
-        String loginId = SecurityUtils.getCurrentMemberName();
+        String loginId = SecurityUtils.getCurrentUserId();
         User findUser = userRepository.findByLoginId(loginId);
         resultService.save(dto, findUser.getId());
         return ResponseEntity.ok(ApiUtils.success("맵 저장 성공"));
