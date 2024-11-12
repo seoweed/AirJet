@@ -15,10 +15,11 @@ public class ResultService {
     private final ResultRepository resultRepository;
 
     // 결과 저장
-    public Result save(ResultRequestDTO.saveDTO dto, Long memberId) {
+    public Result save(ResultRequestDTO.saveDTO dto, Long userId, ResultResponseDTO.saveDTO saveDTO) {
         Result result = Result.builder()
-                .memberId(memberId)
-                .rank(0)
+                .userId(userId)
+                .rank(saveDTO.rank())
+                .comment(saveDTO.comment())
                 .createAt(LocalDateTime.now())
                 .playTime(dto.playTime())
                 .engineStart(dto.engineStart())

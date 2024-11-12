@@ -2,10 +2,7 @@ package com.meta.air_jet.manvoice;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,9 +11,9 @@ public class ManVocController {
 
     private final ManVocService manVocService;
 
-    @GetMapping("voice/man/{id}")
-    public ResponseEntity<?> getManVoice(@PathVariable("id") Long id) {
-        ManVoc manVoc = manVocService.getManVocById(id);
+    @PostMapping("voice/man")
+    public ResponseEntity<?> getManVoice(@RequestBody ManVocRequestDTO dto) {
+        ManVoc manVoc = manVocService.getManVocById(dto.getId());
         return ResponseEntity.ok(manVoc);
     }
 }

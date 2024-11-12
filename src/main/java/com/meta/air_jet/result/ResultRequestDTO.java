@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 public class ResultRequestDTO {
     public record saveDTO(
             Long playTime,
-            int engineStart,
-            int takeOff,
-            int formation,
-            int airToGround
+            float engineStart,
+            float takeOff,
+            float formation,
+            float airToGround
     ){}
 }

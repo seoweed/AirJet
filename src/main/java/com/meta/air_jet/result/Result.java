@@ -15,24 +15,27 @@ import java.time.LocalDateTime;
 public class Result {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
+    private Long userId;
     private Long playTime;
-    private int engineStart;
-    private int takeOff;
-    private int formation;
-    private int airToGround;
+    private float engineStart;
+    private float takeOff;
+    private float formation;
+    private float airToGround;
     private int rank;
+    private String comment;
     public LocalDateTime createAt;
 
     @Builder
-    public Result(Long memberId, Long playTime, int engineStart, int takeOff, int formation, int airToGround, int rank, LocalDateTime createAt) {
-        this.memberId = memberId;
+
+    public Result(Long userId, Long playTime, float engineStart, float takeOff, float formation, float airToGround, int rank, String comment, LocalDateTime createAt) {
+        this.userId = userId;
         this.playTime = playTime;
         this.engineStart = engineStart;
         this.takeOff = takeOff;
         this.formation = formation;
         this.airToGround = airToGround;
         this.rank = rank;
+        this.comment = comment;
         this.createAt = createAt;
     }
 }
