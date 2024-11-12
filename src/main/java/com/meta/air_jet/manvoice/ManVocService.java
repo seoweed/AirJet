@@ -14,4 +14,10 @@ public class ManVocService {
         return manVocRepository.findById(manVoiceId).orElseThrow();
     }
 
+    public void saveVoice(String url, String description) {
+        ManVoc manVoc = ManVoc.builder()
+                .description(description)
+                .voice(url).build();
+        manVocRepository.save(manVoc);
+    }
 }

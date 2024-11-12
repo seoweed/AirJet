@@ -1,20 +1,37 @@
 package com.meta.air_jet;
 
+import com.meta.air_jet._core.file.AwsFileService;
 import com.meta.air_jet._core.utils.ApiUtils;
 import com.meta.air_jet._core.utils.SecurityUtils;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 @RestController
+@RequiredArgsConstructor
 public class Test {
+    private final AwsFileService awsFileService;
+
+    @PostMapping("/api/test/s3/save")
+    public ResponseEntity<?> s3Save(@RequestParam("file") MultipartFile file) {
+        System.out.println("Test.s3Save");
+        System.out.println("file = " + file);
+        String url = awsFileService.upload(file, "sound");
+        return ResponseEntity.ok(url);
+    }
+
     @PostMapping("/api/test")
+
     public ResponseEntity<?> test() {
+
         System.out.println("Test.test");
         return ResponseEntity.ok(ApiUtils.success("테스트 api에 접속 성공하였습니다."));
     }
@@ -33,5 +50,6 @@ public class Test {
 
         return ResponseEntity.ok(ApiUtils.success("테스트 api에 접속 성공하였습니다. 로그인 아이디: " + SecurityUtils.getCurrentUserId()));
     }
+
 
 }

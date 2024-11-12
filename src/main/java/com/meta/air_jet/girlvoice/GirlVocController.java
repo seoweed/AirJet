@@ -4,10 +4,7 @@ import com.meta.air_jet.manvoice.ManVoc;
 import com.meta.air_jet.manvoice.ManVocService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +13,10 @@ public class GirlVocController {
 
     private final GirlVocService girlVocService;
 
-    @GetMapping("voice/girl/{id}")
-    public ResponseEntity<?> getGirlVoice(@PathVariable("id") Long id) {
-        GirlVoc girlVoc = girlVocService.getGirlVocById(id);
-        return ResponseEntity.ok(girlVoc);
+    @PostMapping("voice/girl")
+    public ResponseEntity<?> getGirlVoice(@RequestBody GirlVocRequestDTO dto) {
+        GirlVoc girlVoc = girlVocService.getGirlVocById(dto.getId());
+        GirlVocResponseDTO girlVocResponseDTO = new GirlVocResponseDTO(girlVoc.getVoice(), girlVoc.getDescription());
+        return ResponseEntity.ok(girlVocResponseDTO);
     }
 }

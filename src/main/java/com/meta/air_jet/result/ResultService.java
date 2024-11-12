@@ -18,8 +18,8 @@ public class ResultService {
     public Result save(ResultRequestDTO.saveDTO dto, Long userId, ResultResponseDTO.saveDTO saveDTO) {
         Result result = Result.builder()
                 .userId(userId)
-                .rank(saveDTO.rank())
-                .comment(saveDTO.comment())
+                .rank(0)
+                .comment("aaa")
                 .createAt(LocalDateTime.now())
                 .playTime(dto.playTime())
                 .engineStart(dto.engineStart())
