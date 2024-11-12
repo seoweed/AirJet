@@ -21,16 +21,12 @@ public class ManVocController {
 
     @PostMapping("/voice")
     public ResponseEntity<?> getManVoice(@RequestBody ManVocRequestDTO dto) throws IOException {
-        System.out.println("ManVocController.getManVoice 실행");
-//        ManVoc manVoc = manVocService.getManVocById(dto.getId());
-//        ManVocResponseDTO manVocResponseDTO = new ManVocResponseDTO(manVoc.getVoice(), manVoc.getDescription());
-
         try {
-            ClassPathResource audio = new ClassPathResource("audio/12628B134C5A460B4B.wav");
-            byte[] bytes = Files.readAllBytes(audio.getFile().toPath());
-            String testAudioEncoding = Base64.getEncoder().encodeToString(bytes);
-            ManVocResponseDTO manVocResponseDTOTest = new ManVocResponseDTO(testAudioEncoding, "test 설명");
-            return ResponseEntity.ok(manVocResponseDTOTest);
+            ManVoc manVoc = manVocService.getManVocById(dto.getId());
+            String fileEncoding = manVocService
+                    .downloadAndEncodeFileFromUrl(manVoc.getVoice());
+            ManVocResponseDTO manVocResponseDTO = new ManVocResponseDTO(fileEncoding, manVoc.getDescription());
+            return ResponseEntity.ok(manVocResponseDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }
