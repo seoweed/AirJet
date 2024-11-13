@@ -37,6 +37,7 @@ public class SecurityConfig {
             "/api/upload",
             "/api/maps",
             "/api/voice",
+            "/api/geocode",
             "/api/voice/test",
             "api/image/*",
             "/api/getImage",

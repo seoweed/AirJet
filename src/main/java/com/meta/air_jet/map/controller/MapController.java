@@ -26,6 +26,7 @@ public class MapController {
     private final MapService mapService;
     private final FireBaseService fireBaseService;
 
+    // 맵 생성 저장
     @PostMapping("/map/create")
     public ResponseEntity<?> save(
             @RequestPart("file") MultipartFile file,
@@ -39,7 +40,7 @@ public class MapController {
         }
         return new ResponseEntity<>(ApiUtils.success("맵 저장을 완료했습니다."), HttpStatus.OK);
     }
-
+    // 맵 데이터 내보내기
     @PostMapping("/map/data")
     public HashMap<String, Object> mapData(@RequestBody MapRequestDTO.getMapDataDTO dto) {
 
@@ -96,7 +97,7 @@ public class MapController {
     @GetMapping("/map/all")
     public ResponseEntity<?> mapList(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size
+            @RequestParam(defaultValue = "3") int size
     ) {
 
         Page<Map> mapList;
