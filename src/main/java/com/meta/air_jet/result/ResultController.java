@@ -29,20 +29,20 @@ public class ResultController {
         String loginId = SecurityUtils.getCurrentUserId();
         User findUser = userRepository.findByLoginId(loginId);
 
-
+        // api 요청 body 생성
         Map<String, Object> requestBody = Map.of(
                 "start", dto.engineStart(),
                 "takeoff", dto.takeOff(),
                 "formation", dto.formation(),
                 "air_to_ground", dto.airToGround()
         );
+        // api 요청 및 response
         ResultResponseDTO.saveDTO saveDTO = rankClient.evaluateSimulation(requestBody);
-        rankClient.evaluateSimulation(requestBody);
-        resultService.save(dto, findUser.getId(), saveDTO);
-        Map result = new HashMap<String, Object>();
-        result.put("rank", 1);
-        result.put("comment", saveDTO.feedback());
-        return ResponseEntity.ok(result);
+
+        int rank = resultService.save(dto, findUser.getId(), saveDTO);
+
+        ResultResponseDTO.responseDTO responseDTO = new ResultResponseDTO.responseDTO(rank, saveDTO.feedback());
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

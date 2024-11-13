@@ -6,4 +6,9 @@ public class ResultResponseDTO {
             String feedback
     ) {
     }
+
+    public record responseDTO(
+            int rank,
+            String comment
+    ){}
 }
