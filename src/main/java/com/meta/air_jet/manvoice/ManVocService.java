@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @Transactional
@@ -75,4 +76,19 @@ public class ManVocService {
             throw new RuntimeException("S3 파일을 다운로드 중 오류 발생", e);
         }
     }
+
+    public List<ManVocAllResponseDTO> getVocAll() {
+        List<ManVoc> all = manVocRepository.findAll();
+        List<ManVocAllResponseDTO> vocAllResponseDTOs = new ArrayList<>();
+        all.forEach(voice -> {
+            vocAllResponseDTOs.add(
+                    new ManVocAllResponseDTO(
+                            voice.getId(),
+                            downloadAndEncodeFileFromUrl(voice.getVoice()),
+                            voice.getDescription()
+                    ));
+        });
+        return vocAllResponseDTOs;
+    }
+
 }

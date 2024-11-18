@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +38,16 @@ public class ManVocController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PostMapping("/voice/all")
+    public ResponseEntity<?> getManVoiceAll() {
+        List<ManVocAllResponseDTO> findAllVocEncoding = manVocService.getVocAll();
+        return ResponseEntity.ok(findAllVocEncoding);
+    }
+
     @PostMapping("/voice/save")
     public ResponseEntity<?> saveVoice(@RequestParam("file") MultipartFile file,
-                                       @RequestParam("description") String description){
+                                       @RequestParam("description") String description) {
+
         String url = awsFileService.upload(file, "sound");
         manVocService.saveVoice(url, description);
         return ResponseEntity.ok(url);
