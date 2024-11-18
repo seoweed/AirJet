@@ -21,7 +21,6 @@ public class Mission {
     private int commandNo;
 
     @Builder
-
     public Mission(int pinNo, int x, int y, int commandNo) {
         this.pinNo = pinNo;
         this.x = x;

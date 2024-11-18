@@ -1,6 +1,7 @@
 package com.meta.air_jet.map.service;
 
 
+import com.meta.air_jet._core.file.AwsFileService;
 import com.meta.air_jet.firebase.FireBaseService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
@@ -28,6 +29,7 @@ public class MapService {
     private final MapRepository mapRepository;
     private final MissionRepository missionRepository;
     private final FireBaseService fireBaseService;
+    private final AwsFileService awsFileService;
 
     public Map getMapInfo(String mapName) {
         return mapRepository.findByMapName(mapName);
@@ -36,13 +38,39 @@ public class MapService {
     public ArrayList<Mission> getMapMissions(List<Long> missionIds) {
         ArrayList<Mission> mapMissions = new ArrayList<>();
         missionIds.forEach(missionId -> {
-            Mission mission = missionRepository.findById(missionId).get();
+            Mission mission = missionRepository.findById(missionId).orElseThrow();
             mapMissions.add(mission);
         });
         return mapMissions;
     }
 
-    public void save(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
+    public void saveS3(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
+        duplicateMapName(dto.mapName());
+        List<Long> missionsIds = new ArrayList<>();
+        // dto에서 받은 미션들을 mission repo 에 저장
+        List<Mission> missions = missionRepository.saveAll(dto.mission());
+
+        // missionIds 값 추가
+        missions.forEach(mission -> missionsIds.add(mission.getId()));
+        // 이미지 추가 및 url 가져오기
+        String imageUrl = awsFileService.upload(mapImage, "image");
+        System.out.println("imageUrl = " + imageUrl);
+        // 맵 생성
+        Map map = Map.builder()
+                .mapName(dto.mapName())
+                .mapImage(imageUrl)
+                .latitude(dto.latitude())
+                .longitude(dto.longitude())
+                .producer(dto.producer())
+                .missionIds(missionsIds)
+                .createAt(LocalDateTime.now())
+                .build();
+
+        // 맵 저장
+        mapRepository.save(map);
+    }
+
+    public void saveFb(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
         duplicateMapName(dto.mapName());
 
         List<Long> missionsIds = new ArrayList<>();

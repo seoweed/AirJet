@@ -20,6 +20,7 @@ bin/
 ### IntelliJ IDEA ###
 #**/src/main/resources/application.yml
 **/src/main/resources/application-secrets.yml
+**/src/main/resources/application-aws.yml
 **/src/main/resources/firebase-service-account.json
 
 .idea

@@ -31,6 +31,10 @@ dependencies {
     // thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    // feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+
     // Security 관련
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -52,6 +56,9 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
+    // aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     // 개발 편의성
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -66,9 +73,16 @@ dependencies {
     // postgresql
     runtimeOnly 'org.postgresql:postgresql'
 
+
     // 테스트 관련
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
+    }
 }
 
 tasks.named('test') {

@@ -8,7 +8,6 @@ import java.util.List;
 public class MapRequestDTO {
     public record mapCreateDTO(
         String mapName,
-//        MultipartFile mapImage,
         double latitude,
         double longitude,
         String producer,
@@ -19,4 +18,15 @@ public class MapRequestDTO {
     public record getMapDataDTO(
             String mapName
     ){}
+
+    public record saveS3DTO (
+            String mapName,
+//        MultipartFile mapImage,
+            double latitude,
+            double longitude,
+            String producer,
+            List<Mission> mission,
+            MultipartFile file
+    ) {
+    }
 }
