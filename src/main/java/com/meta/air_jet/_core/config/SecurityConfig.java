@@ -29,8 +29,9 @@ public class SecurityConfig {
     }
 
     private static final String[] WHITE_LIST = {
-            "/",
-            "/api/map/*",
+            "/**",
+            "/api/map/**",
+            "/api/map/create",
             "/api/test/*",
             "/api/test/s3/save",
             "/api/voice/save",
@@ -42,7 +43,6 @@ public class SecurityConfig {
             "api/image/*",
             "/api/getImage",
             "/api/image/save",
-            "/api/map/create",
             "/api/auth/**",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
             ,"/h2-console/**"  // h2-console 경로 추가
@@ -64,8 +64,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrfConfig) ->
-                        csrfConfig.disable())
+                .csrf().disable()
                 // 세션 관리 방식을 STATELESS로 설정. 이 설정은 서버에서 세션을 저장하지 않고,
                 // 클라이언트가 인증 정보를 매번 제공해야 함을 의미. 주로 JWT 기반 인증을 사용할 때 사용
                 .sessionManagement(sessionManagement ->

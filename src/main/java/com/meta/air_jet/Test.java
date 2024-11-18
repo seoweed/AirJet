@@ -6,10 +6,7 @@ import com.meta.air_jet._core.utils.SecurityUtils;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -49,6 +46,19 @@ public class Test {
         System.out.println("로그인 한 아이디: " + SecurityUtils.getCurrentUserId());
 
         return ResponseEntity.ok(ApiUtils.success("테스트 api에 접속 성공하였습니다. 로그인 아이디: " + SecurityUtils.getCurrentUserId()));
+    }
+
+    @PostMapping("test")
+    public ResponseEntity<?> test2(
+            @RequestPart("dto") TestRequestDTO.mapDTO mapDTO,
+            @RequestPart("file") MultipartFile file
+    ) {
+        System.out.println("Received MapDTO: " + mapDTO);
+
+        // 이미지 파일 확인
+        System.out.println("Received File Name: " + file.getOriginalFilename());
+        System.out.println("Received File Size: " + file.getSize());
+        return ResponseEntity.ok(mapDTO);
     }
 
 
