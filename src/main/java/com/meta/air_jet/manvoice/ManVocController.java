@@ -2,16 +2,13 @@ package com.meta.air_jet.manvoice;
 
 import com.meta.air_jet._core.file.AwsFileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +38,9 @@ public class ManVocController {
     @PostMapping("/voice/all")
     public ResponseEntity<?> getManVoiceAll() {
         List<ManVocAllResponseDTO> findAllVocEncoding = manVocService.getVocAll();
-        return ResponseEntity.ok(findAllVocEncoding);
+        HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+        stringObjectHashMap.put("data", findAllVocEncoding);
+        return ResponseEntity.ok(stringObjectHashMap);
     }
 
     @PostMapping("/voice/save")

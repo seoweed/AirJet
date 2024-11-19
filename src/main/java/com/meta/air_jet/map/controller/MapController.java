@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -75,9 +76,10 @@ public class MapController {
         HashMap<String, Object> outputStartPoint = new HashMap<>();
 
         Map map = mapService.getMapInfo(dto.mapName());
-        ArrayList<Mission> mapMissions = mapService.getMapMissions(map.getMissionIds());
+        List<Mission> mapMissions = mapService.getMapMissions(map.getMissionIds());
+        List<Mission> missions = mapMissions.stream().filter(m -> m.getPinNo() != -1).collect(Collectors.toList());
 
-        Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == 1).findAny().orElseThrow();
+        Mission startPointMission = mapMissions.stream().filter(mission -> mission.getPinNo() == -1).findAny().orElseThrow();
 
         String imageEncoded;
         try {
@@ -100,7 +102,7 @@ public class MapController {
         outputMapData.put("latitude", map.getLatitude());
         outputMapData.put("longitude", map.getLongitude());
         outputMapData.put("producer", map.getProducer());
-        outputMapData.put("mission", mapMissions);
+        outputMapData.put("mission", missions);
         outputMapData.put("startPoint", outputStartPoint);
 
         System.out.println("맵 데이터 내보내기 성공" + LocalDateTime.now());

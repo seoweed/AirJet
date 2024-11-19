@@ -16,4 +16,11 @@ public class GirlVocService {
         return girlVoiceRepository.findById(girlVoiceId).orElseThrow();
     }
 
+    public void saveVoice(String url, String description) {
+        GirlVoc girlVoc = GirlVoc.builder()
+                .description(description)
+                .voice(url).build();
+        girlVoiceRepository.save(girlVoc);
+    }
+
 }

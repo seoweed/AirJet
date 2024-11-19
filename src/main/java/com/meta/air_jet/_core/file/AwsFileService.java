@@ -31,6 +31,13 @@ public class AwsFileService {
         return uploadImageUrl;
     }
 
+    // S3로 파일 업로드하기(한글)
+    public String uploadkorean(MultipartFile uploadFile, String dirName) {
+        String fileName = dirName + "/" + UUID.randomUUID();   // S3에 저장된 파일 이름
+        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+        return uploadImageUrl;
+    }
+
     // S3로 업로드
     private String putS3(MultipartFile uploadFile, String fileName) {
         try {
