@@ -12,31 +12,9 @@ spring:
     default-property-inclusion: non_null
 
   profiles:
-    active: default,secrets,aws
+    active: default,dev,aws
 
-#  #  // test DB (DB ?? ? ?? ?? ??)
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
-#  h2:
-#    console:
-#      enabled: true
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/air_jet
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    show-sql: true
-#    database: h2
-    database: postgresql
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
 
 server:
   port: 7757

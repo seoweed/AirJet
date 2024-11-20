@@ -2,7 +2,6 @@ package com.meta.air_jet.map.service;
 
 
 import com.meta.air_jet._core.file.AwsFileService;
-import com.meta.air_jet.firebase.FireBaseService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.repository.MapRepository;
@@ -28,7 +27,6 @@ import java.util.List;
 public class MapService {
     private final MapRepository mapRepository;
     private final MissionRepository missionRepository;
-    private final FireBaseService fireBaseService;
     private final AwsFileService awsFileService;
 
     public Map getMapInfo(String mapName) {
@@ -67,25 +65,6 @@ public class MapService {
                 .build();
 
         // 맵 저장
-        mapRepository.save(map);
-    }
-
-    public void saveFb(MultipartFile mapImage, MapRequestDTO.mapCreateDTO dto) throws IOException {
-        duplicateMapName(dto.mapName());
-
-        List<Long> missionsIds = new ArrayList<>();
-        List<Mission> missions = missionRepository.saveAll(dto.mission());
-        missions.forEach(mission -> missionsIds.add(mission.getId()));
-        String fileName = fireBaseService.uploadImage(mapImage);
-        Map map = Map.builder()
-                .mapName(dto.mapName())
-                .mapImage(fileName)
-                .latitude(dto.latitude())
-                .longitude(dto.longitude())
-                .producer(dto.producer())
-                .missionIds(missionsIds)
-                .createAt(LocalDateTime.now())
-                .build();
         mapRepository.save(map);
     }
 
