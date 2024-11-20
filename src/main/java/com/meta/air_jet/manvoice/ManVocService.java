@@ -30,7 +30,7 @@ public class ManVocService {
                 .description(description)
                 .voice(url).build();
         manVocRepository.save(manVoc);
-        // aa
+        // aaa
     }
 
     public List<VocAllResponseDTO> getVocAll() {
