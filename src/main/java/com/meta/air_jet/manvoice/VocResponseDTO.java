@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ManVocResponseDTO {
+public class VocResponseDTO {
     private String voice;
     private String description;
 }
