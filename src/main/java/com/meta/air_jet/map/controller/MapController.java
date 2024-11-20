@@ -2,7 +2,6 @@ package com.meta.air_jet.map.controller;
 
 import com.meta.air_jet._core.file.AwsFileService;
 import com.meta.air_jet._core.utils.ApiUtils;
-import com.meta.air_jet.firebase.FireBaseService;
 import com.meta.air_jet.manvoice.ManVocService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
@@ -26,23 +25,6 @@ import java.util.stream.Collectors;
 public class MapController {
     private final MapService mapService;
     private final AwsFileService awsFileService;
-    private final FireBaseService fireBaseService;
-    private final ManVocService manVocService;
-
-    // 맵 생성 저장
-    @PostMapping("/map/create1")
-    public ResponseEntity<?> saveFb(
-            @RequestPart("file") MultipartFile file,
-            @RequestPart("data") MapRequestDTO.mapCreateDTO dto) {
-        System.out.println("file = " + file);
-        System.out.println("dto.toString() = " + dto.toString());
-        try {
-            mapService.saveFb(file, dto);
-        } catch (Exception e) {
-            return new ResponseEntity<>(ApiUtils.error(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(ApiUtils.success("맵 저장을 완료했습니다."), HttpStatus.OK);
-    }
 
     // 맵 생성 저장 db에 url로 저장 (s3)    @PostMapping("/map/create")
     @PostMapping(path = "/map/create")
