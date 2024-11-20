@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,14 +21,14 @@ public class ManVocController {
     private final ManVocService manVocService;
     private final AwsFileService awsFileService;
 
-    @PostMapping("/voice")
-    public ResponseEntity<?> getManVoice(@RequestBody ManVocRequestDTO dto) throws IOException {
+    @PostMapping("/m-voice")
+    public ResponseEntity<?> getManVoice(@RequestBody VocRequestDTO dto) throws IOException {
         try {
             ManVoc manVoc = manVocService.getManVocById(dto.getId());
-            String fileEncoding = manVocService
-                    .downloadAndEncodeFileFromUrl(manVoc.getVoice());
-            ManVocResponseDTO manVocResponseDTO = new ManVocResponseDTO(fileEncoding, manVoc.getDescription());
-            return ResponseEntity.ok(manVocResponseDTO);
+            String fileEncoding = awsFileService.
+                    downloadAndEncodeFileFromUrl(manVoc.getVoice());
+            VocResponseDTO vocResponseDTO = new VocResponseDTO(fileEncoding, manVoc.getDescription());
+            return ResponseEntity.ok(vocResponseDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,11 +36,12 @@ public class ManVocController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/voice/all")
+    @PostMapping("/m-voice/all")
     public ResponseEntity<?> getManVoiceAll() {
-        List<ManVocAllResponseDTO> findAllVocEncoding = manVocService.getVocAll();
+        List<VocAllResponseDTO> findAllVocEncoding = manVocService.getVocAll();
         HashMap<String, Object> stringObjectHashMap = new HashMap<>();
         stringObjectHashMap.put("data", findAllVocEncoding);
+        System.out.println("ManVocController.getManVoiceAll 메소드 실행, 모든 보이스 내보내기 " + LocalDateTime.now());
         return ResponseEntity.ok(stringObjectHashMap);
     }
 
@@ -53,10 +55,10 @@ public class ManVocController {
     }
 
     @PostMapping("/voice/test")
-    public ResponseEntity<?> getManVoiceTest(@RequestBody ManVocRequestDTO dto){
+    public ResponseEntity<?> getManVoiceTest(@RequestBody VocRequestDTO dto){
         try {
             ManVoc manVoc = manVocService.getManVocById(dto.getId());
-            ArrayList<Object> objects = manVocService.downloadFileFromUrl(manVoc.getVoice());
+            ArrayList<Object> objects = awsFileService.downloadFileFromUrl(manVoc.getVoice());
             byte[] filedData = (byte[]) objects.get(0);
             String contentType = (String) objects.get(1);
 

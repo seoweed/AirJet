@@ -1,28 +1,21 @@
 package com.meta.air_jet.map.controller;
 
-import com.meta.air_jet.TestRequestDTO;
+import com.meta.air_jet._core.file.AwsFileService;
 import com.meta.air_jet._core.utils.ApiUtils;
 import com.meta.air_jet.firebase.FireBaseService;
-import com.meta.air_jet.manvoice.ManVoc;
-import com.meta.air_jet.manvoice.ManVocRequestDTO;
-import com.meta.air_jet.manvoice.ManVocResponseDTO;
 import com.meta.air_jet.manvoice.ManVocService;
 import com.meta.air_jet.map.domain.Map;
 import com.meta.air_jet.map.domain.dto.MapRequestDTO;
 import com.meta.air_jet.map.service.MapService;
 import com.meta.air_jet.mission.Mission;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class MapController {
     private final MapService mapService;
+    private final AwsFileService awsFileService;
     private final FireBaseService fireBaseService;
     private final ManVocService manVocService;
 
@@ -83,7 +77,7 @@ public class MapController {
 
         String imageEncoded;
         try {
-            imageEncoded = manVocService.downloadAndEncodeFileFromUrl(map.getMapImage());
+            imageEncoded = awsFileService.downloadAndEncodeFileFromUrl(map.getMapImage());
         } catch (Exception e) {
             return new HashMap<>() {{
                 put("errorMessage", "이미지 파일 오류");

@@ -16,12 +16,12 @@ public class GirlVoc {
     private Long id;
     private String description;
     private String voice;
-    private String category;
+    private Integer idx;
 
     @Builder
-    public GirlVoc(String description, String voice, String category) {
+    public GirlVoc(String description, String voice, Integer idx) {
         this.description = description;
         this.voice = voice;
-        this.category = category;
+        this.idx = idx;
     }
 }
