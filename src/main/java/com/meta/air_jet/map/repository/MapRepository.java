@@ -18,4 +18,7 @@ public interface MapRepository extends JpaRepository<Map, Long> {
 
     @Query("SELECT m FROM Map m ORDER BY m.createAt DESC")
     Page<Map> findAllSorted(Pageable pageable);
+
+    @Query("delete from Map m where m.mapName = :name")
+    void deleteByMapName(@Param("name") String name);
 }
