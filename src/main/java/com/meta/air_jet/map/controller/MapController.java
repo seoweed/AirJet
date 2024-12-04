@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Transactional
 public class MapController {
     private final MapService mapService;
     private final AwsFileService awsFileService;
@@ -117,4 +119,18 @@ public class MapController {
         return ResponseEntity.ok().body(ApiUtils.success(mapList));
     }
 
+    // 멥 삭제
+    @GetMapping("/map/delete/{name}")
+    public ResponseEntity<?> deleteMap(@PathVariable("name") String name) {
+        try {
+            mapService.deleteMap(name);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(ApiUtils.error("맵 삭제 실패"));
+        }
+        return ResponseEntity
+                .ok()
+                .body(ApiUtils.success("맵 삭제 성공, 맵 이름: " + name));
+    }
 }
