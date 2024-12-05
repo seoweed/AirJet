@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Transactional
 public class MapController {
     private final MapService mapService;
     private final AwsFileService awsFileService;
@@ -125,6 +124,7 @@ public class MapController {
         try {
             mapService.deleteMap(name);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity
                     .internalServerError()
                     .body(ApiUtils.error("맵 삭제 실패"));
